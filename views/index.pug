@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  div.container-fluid
+    h1.page-header #{title}
+    form(method="POST", action="/")
+      h4 Enter a search phrase
+      input.form-control(type="text", name="search_phrase", value=" ")
+      input.btn.btn-default.margin(type="submit" value="search") 
+    h4 output:
+    div #{response}
