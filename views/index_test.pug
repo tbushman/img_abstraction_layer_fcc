@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  div.container-fluid
+    h1.page-header #{title}
+    form.gsce-searchbox(data-defaultToImageSearch="true", method="POST", action="/")
+      h4 Enter a search phrase
+      input.form-control(type="hidden", name="cx", value=""+process.env.CX+"")
+      input.form-control(type="hidden", name="ie", value="UTF-8")
+      input.form-control(type="text", name="q", size="31")
+      input.btn.btn-default.margin(type="submit", name="sa", value="search") 
+    img(src="http://cse.google.com/images/google_custom_search_smwide.gif")
+    h4 output:
+    div.gsce-searchresults(data-defaultToImageSearch="true") #{list}
+    img(src=""+display+"")
+    form(method="POST", action="/offset="+page+"")
+      input.form-control(type="number", min="1", name="page", id="thisPage", value=""+page+"")
+      input.btn.btn-default(type="submit", id="prev", name="page", value=""+page-1+"")
+      input.btn.btn-default(type="submit", id="next", name="page", value=""+page+1+"")
