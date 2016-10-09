@@ -1,5 +1,4 @@
 var express = require("express");
-//var http = require('http');
 var dotenv = require('dotenv');
 var _ = require('underscore');
 var path = require("path");
@@ -10,7 +9,6 @@ var url = require('url');
 var google = require('googleapis');
 var GoogleSearch = require('google-search');
 var pug = require('pug');
-//var ObjectID = mongodb.ObjectID;
 
 var app = express();
 dotenv.load();
@@ -27,6 +25,7 @@ app.use(urlencodedParser);
 app.use('/', require('./index.js'));
 app.use('/search', require('./search.js'));
 app.use('/history', require('./history.js'));
+app.post('/', require('./search.js'));
 
 var server = app.listen(process.env.PORT || 8080, function(){
 	var port = server.address().port;
