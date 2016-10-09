@@ -18,8 +18,8 @@ router.use('/search', require('./search.js'))
 router.get('/', function(req, res){
 	//home page
 	res.render('index', {
-		title: 'FCC Image Search Abstraction Layer'//,
-		//page: 1
+		title: 'FCC Image Search Abstraction Layer',
+		page: 0
 	});
 });
 

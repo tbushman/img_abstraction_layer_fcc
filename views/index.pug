@@ -8,6 +8,7 @@ block content
       input.form-control(type="hidden", name="cx", value=""+process.env.CX+"")
       input.form-control(type="hidden", name="ie", value="UTF-8")
       input.form-control(type="text", name="q", size="31")
+      input.form-control(type="hidden", min="1", name="page", value=""+page+"")
       input.btn.btn-default.margin(type="submit", name="sa", value="search") 
     img(src="http://cse.google.com/images/google_custom_search_smwide.gif")
     h4 output:

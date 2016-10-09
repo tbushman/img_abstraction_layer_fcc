@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
+//attempted to multi-form for offset, but the offset function is limited to typing '?offset=2' in the address bar after search phrase
+//var multer  = require('multer');
+//var upload = multer();
 var google = require('googleapis');
 var GoogleSearch = require('google-search');
 var path = require("path");
@@ -10,7 +13,9 @@ var mongodb = require("mongodb");
 var mongo = require('./mongo_client.js');
 var url = require('url');
 var GoogleSearch = require('google-search');
-
+//var $ = require('jquery')(require("jsdom").jsdom().defaultView);
+//var jsdom = require("jsdom");
+//var window = jsdom.jsdom().defaultView;
 dotenv.load();
 var googleSearch = new GoogleSearch({
   key: process.env.API_KEY,
@@ -29,9 +34,16 @@ function handleError(res, reason, message, code) {
 }
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-router.post('/', urlencodedParser,function(req, res){
+/*jsdom.jQueryify(window, "http://code.jquery.com/jquery.js", function () {
+  	var $ = window.$;
+ 	offset = $('#thisPage').val();
+	console.log(offset)
+});*/
+//var cpUpload = upload.none()
+router.post('/', urlencodedParser, function(req, res){
 	var search_term = req.body.q;
 	var offset;
+	console.log(offset)
 	processSearch(res, search_term, offset)
 })
 
@@ -44,7 +56,7 @@ router.get(/(.+)/, function(req, res){
 });
 		
 function processSearch(res, search_term, offset) {
-	//console.log(search_term)
+	
 	if (offset == undefined) {
 		offset = 0;
 	} else {		
@@ -57,12 +69,12 @@ function processSearch(res, search_term, offset) {
 	} else {
 		start = offset+'1'; //i.e. if offset is 1, start w/ result 11
 	}
-	doSearch(res, search_term, start, number)
+	doSearch(res, search_term, start, number, offset)
 	
 	
 }
 
-function doSearch(res, search_term, start, number) {
+function doSearch(res, search_term, start, number, offset) {
 	var list;
 	var imgSrc;
 	googleSearch.build({
@@ -94,7 +106,7 @@ function doSearch(res, search_term, start, number) {
 		res.render('index', {
 			title: 'FCC Image Search Abstraction Layer',
 		    //display: imgSrc
-			//page: offset,
+			page: offset,
 			list: JSON.stringify(list)
 		});
 	})	
