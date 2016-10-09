@@ -2,6 +2,7 @@ var express = require("express");
 var path = require("path");
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
+var mongo = require('./mongo_client.js');
 var dotenv = require('dotenv');
 var url = require('url');
 var pug = require('pug');
@@ -28,10 +29,19 @@ var googleSearch = new GoogleSearch({
   key: process.env.API_KEY,
   cx: process.env.CX
 });
+var uri = process.env.MONGODB_URI;
+
+mongo.connect(uri, function(){
+	console.log('connected to MongoDB');
+	var server = app.listen(process.env.PORT || 8080, function(){
+		var port = server.address().port;
+		console.log('App now running on port', port);
+	});
+})
 
 //this is how I'm getting the .env MONGOLAB_URI loaded:
 //var client = new ImagesClient(''+process.env.CX+'', ''+process.env.API_KEY+'');
-var MongoClient = mongodb.MongoClient;
+/*var MongoClient = mongodb.MongoClient;
 var uri = process.env.MONGODB_URI;
 var db;
 //MongoClient will save searches for reference.
@@ -43,12 +53,13 @@ MongoClient.connect(uri, function (err, database) {
 		db = database;
     	console.log('Connection established to', uri);
 
-		var server = app.listen(process.env.PORT/* || 8080*/, function(){
+		var server = app.listen(process.env.PORT || 8080, function(){
 			var port = server.address().port;
 			console.log('App now running on port', port);
 		});
 	}
 });
+*/
 app.get('/', function(req, res){
 	res.render('index', {
 		title: 'FCC Image Abstraction Layer'//,
@@ -102,7 +113,7 @@ app.get(/(.+)/, function(req, res){
 			date: now
 		};
 
-		var collection = db.collection('fcc_img_search');
+		var collection = mongo.db().collection('fcc_img_search');
 		collection.insertOne(insertDb, function(err, doc){
 			if (err) {
 				handleError(res, err.message, "Failed to update DB.");
@@ -116,8 +127,8 @@ app.get(/(.+)/, function(req, res){
 		});
 	})
 });
-/*var offset = $('#thisPage').val(); //page
 
+/*var offset = $('#thisPage').val(); //page
 app.post('/offset='+offset+'', urlencodedParser, function(req, res){
 	var start = req.body.page
 });
